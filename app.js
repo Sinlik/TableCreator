@@ -1,19 +1,20 @@
 let body = document.querySelector('body');
 let submitBtn = document.querySelector('button#submit');
-let tableInputs = document.querySelector('#tableInput');
 let tableColumn = document.querySelector('#tableInput #columnInput input');
-let tableRow = tableInputs.querySelector('#tableInput #rowInput input');
+let tableRow = document.querySelector('#tableInput #rowInput input');
 
 let debugging = document.createElement("div")
 
 debugging.innerText = "Debugging Text: " + submitBtn
 
 // body.append(debugging)
+// settign variables to be defined later
 let tableColumnValue;
-let tableRowValue;
+let tableHeaderValue;
 
+// start the table process of collecting the headers for creating the table
 let tableProcess = function () {
-    tableRowValue = parseFloat(tableRow.value)
+    tableHeaderValue = parseFloat(tableRow.value)
 
     const table = document.createElement('table');
     table.id = "getHeaders"
@@ -22,8 +23,8 @@ let tableProcess = function () {
     let headers = document.createElement('tr')
 
     headerDiv.innerText = "Header Values:"
-
-    for (let i = 0; i < tableRowValue; i++) {
+    // create a header input for each header stated in the table input
+    for (let i = 0; i < tableHeaderValue; i++) {
         let td = document.createElement("td")
         let tdInput = document.createElement('input')
         tdInput.className = "headerVal" + (i+1)
@@ -58,24 +59,28 @@ let createHeadersWithVals = function () {
     }
     table.append(tr)
     body.append(table)
-    // creating input values
-    for (let col = 0; col < tableColumnValue; col++) {
+    let addItemBtn = document.createElement('button');
+    addItemBtn.innerText = "+"
+    table.append(addItemBtn)
+
+    addItemBtn.addEventListener('click', function () {
+        tableColumnValue++;
         let tr = document.createElement('tr')
-        for (let row = 0; row < tableRowValue; row++) {
+        for (let row = 0; row < tableHeaderValue; row++) {
             let td = document.createElement('td')
             let tdInput = document.createElement('input')
             let headersValSearch = "table#getHeaders div tr td input.headerVal" + (row + 1)
             let getHeaderVal = document.querySelector(headersValSearch)
-            tdInput.className = getHeaderVal.value + (col + 1)
+            tdInput.className = getHeaderVal.value + (tableColumnValue)
             td.append(tdInput)
             tr.append(td);
         }
         tr.append(document.createElement('br'))
         table.append(tr);
-    }
-    body.append(table);
-    body.append(submitTableVals)
-
+        table.appendChild(addItemBtn)
+        body.append(table);
+        body.append(submitTableVals)
+    }, 0)
     submitTableVals.addEventListener("click", function () {
         createTable()
     }, 0)
@@ -84,6 +89,7 @@ let createHeadersWithVals = function () {
 let createTable = function () {
     const table = document.createElement('table');
     let tr = document.createElement('tr')
+    // creating the headers
     for (let i = 0; i < tableRowValue; i++) {
         let headers = document.createElement("th")
         let headersValSearch = "table#getHeaders div tr td input.headerVal" + (i + 1)
@@ -93,7 +99,7 @@ let createTable = function () {
     }
     table.append(tr)
     body.append(table)
-    // creating input values
+    // creating table items
     for (let col = 0; col < tableColumnValue; col++) {
         let tr = document.createElement('tr')
         for (let row = 0; row < tableRowValue; row++) {
@@ -113,6 +119,6 @@ let createTable = function () {
 
 submitBtn.addEventListener("click", function () {
     tableRowValue = parseFloat(tableRow.value)
-    tableColumnValue = parseFloat(tableColumn.value)
+    tableColumnValue = 0
     tableProcess();
 }, 0);
